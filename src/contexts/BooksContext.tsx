@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import apiKey from '../../apiKey.json';
 
@@ -8,9 +8,10 @@ type Book = {
 };
 
 type BooksContextData = {
-    newBook: (e:any) => void;
-    search: (e:any) => void;
+    newBook: (e: any) => void;
+    search: (e: any) => void;
     result: any[];
+    autocomplete: any[];
 }
 
 export const BooksContext = createContext({} as BooksContextData);
@@ -23,7 +24,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
     const [book, setBook] = useState("");
     const [result, setResult] = useState([]);
-    const [recomend, setRecomend] = useState([]);
+    const [autocomplete, setAutocomplete] = useState([]);
     const key = apiKey[0].apiKey;
 
     function newBook(e: any) {
@@ -40,13 +41,25 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
         console.log(book);
     }
 
-    const aut = key.slice(62,101);
+    useEffect(() => {
+        if (book != "" && book.length >= 3) {
+            axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${aut}&maxResults=6`)
+                .then(info => {
+                    console.log(info.data.items);
+                    setAutocomplete(info.data.items);
+                });
+            console.log("recomend", autocomplete);
+        }
+    }, [book]);
+
+    const aut = key.slice(62, 101);
     return (
         <BooksContext.Provider
             value={{
                 newBook,
                 search,
-                result
+                result,
+                autocomplete
             }}>
             {children}
         </BooksContext.Provider>

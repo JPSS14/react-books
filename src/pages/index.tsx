@@ -1,25 +1,10 @@
 import Head from 'next/head';
 import style from '../styles/main.module.scss';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import apiKey from '../../apiKey.json';
 import { useBooks } from '../contexts/BooksContext';
 
 export default function Home() {
   
-  const {newBook, search, result } = useBooks();
-
-  // useEffect(() => {
-  //   if (book != "" && book.length >= 3) {
-  //     axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${aut}&maxResults=6`)
-  //       .then(info => {
-  //         console.log(info.data.items);
-  //         setRecomend(info.data.items);
-  //       });
-  //     console.log("recomend",recomend);
-  //   }
-  // }, [book]);
-
+  const {newBook, search, result, autocomplete } = useBooks();
 
   return (
     <>
@@ -33,12 +18,12 @@ export default function Home() {
 
         <div className={style.search}>
           <input list="teste" onChange={newBook} type="text" placeholder="digite um livro" />
-          {/* <datalist id="teste">
-            {recomend.map((item, key) => 
+          <datalist id="teste">
+            {autocomplete.map((item, key) => 
               item.volumeInfo.title ?
                 <option value={item.volumeInfo.title} key={key}></option> : <></>        
             )}
-          </datalist> */}
+          </datalist>
           <button onClick={search}>Pesquisar</button>
         </div>
 
