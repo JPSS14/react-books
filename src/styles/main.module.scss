@@ -1,3 +1,39 @@
-*{
-    margin: 0;
+.main{
+    display: flex;
+    flex-wrap: wrap;
+    background: var(--dark-gray);
+    justify-content: center;
+}
+
+.search{
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 100%;
+}
+
+.searchResult{
+    display: flex;
+    flex-wrap: wrap;
+    flex-basis: 95%;
+    justify-content: center;
+
+    .resultArticle{
+        flex-basis: 23%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 10px 5px;
+        border-radius: 20px;
+        overflow: hidden;
+        border: solid 2px #000;
+
+
+        p{
+            flex-basis: 100%;
+            text-align: center;
+            background: var(--brown);
+            padding: 3px;
+            border-bottom: solid 2px #000;
+        }
+    }
 }

@@ -1,12 +1,13 @@
 import Head from 'next/head';
 import style from '../styles/main.module.scss';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import apiKey from '../../apiKey.json';
 
 export default function Home() {
   const [book, setBook] = useState("");
   const [result, setResult] = useState([]);
+  const [recomend, setRecomend] = useState([]);
   const key = apiKey[0].apiKey;
 
 
@@ -16,13 +17,26 @@ export default function Home() {
 
   function search(e) {
     e.preventDefault();
-    axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${key}&maxResults=40`)
+    axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${key}&maxResults=16`)
       .then(info => {
         console.log(info.data.items);
         setResult(info.data.items);
       });
     console.log(book);
   }
+
+  useEffect(() => {
+    if (book != "" && book.length >= 3) {
+      axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${key}&maxResults=6`)
+        .then(info => {
+          console.log(info.data.items);
+          setRecomend(info.data.items);
+        });
+      console.log("recomend",recomend);
+    }
+  }, [book]);
+
+
   return (
     <>
       <Head>
@@ -31,28 +45,50 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main>
+      <main className={style.main}>
 
-        <input onChange={newBook} type="text" placeholder="digite um livro" />
-        <button onClick={search}>Pesquisar</button>
+        <div className={style.search}>
+          <input list="teste" onChange={newBook} type="text" placeholder="digite um livro" />
+          <datalist id="teste">
+            {recomend.map((item, key) => 
+              item.volumeInfo.title ?
+                <option value={item.volumeInfo.title} key={key}></option> : <></>        
+            )}
+          </datalist>
+          <button onClick={search}>Pesquisar</button>
+        </div>
+
 
         {result != [] ?
-          (result.map((item, key) =>
-            <>
-              {item.volumeInfo.title && item.volumeInfo.imageLinks ?
-                <>
-                  <p key={key}>{item.volumeInfo.title}</p>
-                  <img src={item.volumeInfo.imageLinks.thumbnail} alt="" />
-                </> :
-                <>
-                  <p key={key}>{item.volumeInfo.title}</p>
-                  <p>não tem</p>
-                </>
 
-              }
-            </>
-          )) : (<></>)
+
+          (
+            <section className={style.searchResult}>
+              {result.map((item, key) =>
+
+                <article key={key} className={style.resultArticle}>
+                  {item.volumeInfo.title && item.volumeInfo.imageLinks ?
+                    <>
+                      <p>{item.volumeInfo.title}</p>
+                      <img src={item.volumeInfo.imageLinks.thumbnail} alt={item.volumeInfo.title} title={item.volumeInfo.title} />
+                    </>
+                    :
+                    <>
+                      <p>{item.volumeInfo.title}</p>
+                      <p>não tem</p>
+                    </>
+
+                  }
+                </article>
+
+              )}
+            </section>
+          )
+          :
+          (<></>)
         }
+
+
 
       </main>
     </>
