@@ -1,10 +1,11 @@
 import Head from 'next/head';
 import style from '../styles/main.module.scss';
 import { useBooks } from '../contexts/BooksContext';
+import { Search } from '../components/Search';
 
 export default function Home() {
   
-  const {newBook, search, result, autocomplete } = useBooks();
+  const {result} = useBooks();
 
   return (
     <>
@@ -16,17 +17,7 @@ export default function Home() {
 
       <main className={style.main}>
 
-        <div className={style.search}>
-          <input list="teste" onChange={newBook} type="text" placeholder="digite um livro" />
-          <datalist id="teste">
-            {autocomplete.map((item, key) => 
-              item.volumeInfo.title ?
-                <option value={item.volumeInfo.title} key={key}></option> : <></>        
-            )}
-          </datalist>
-          <button onClick={search}>Pesquisar</button>
-        </div>
-
+        <Search/>
 
         {result != [] ?
 
