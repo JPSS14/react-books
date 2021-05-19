@@ -3,38 +3,22 @@ import style from '../styles/main.module.scss';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import apiKey from '../../apiKey.json';
+import { useBooks } from '../contexts/BooksContext';
 
 export default function Home() {
-  const [book, setBook] = useState("");
-  const [result, setResult] = useState([]);
-  const [recomend, setRecomend] = useState([]);
-  const key = apiKey[0].apiKey;
+  
+  const {newBook, search, result } = useBooks();
 
-
-  function newBook(e: any) {
-    setBook(e.target.value);
-  }
-
-  function search(e) {
-    e.preventDefault();
-    axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${key}&maxResults=16`)
-      .then(info => {
-        console.log(info.data.items);
-        setResult(info.data.items);
-      });
-    console.log(book);
-  }
-
-  useEffect(() => {
-    if (book != "" && book.length >= 3) {
-      axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${key}&maxResults=6`)
-        .then(info => {
-          console.log(info.data.items);
-          setRecomend(info.data.items);
-        });
-      console.log("recomend",recomend);
-    }
-  }, [book]);
+  // useEffect(() => {
+  //   if (book != "" && book.length >= 3) {
+  //     axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${aut}&maxResults=6`)
+  //       .then(info => {
+  //         console.log(info.data.items);
+  //         setRecomend(info.data.items);
+  //       });
+  //     console.log("recomend",recomend);
+  //   }
+  // }, [book]);
 
 
   return (
@@ -49,12 +33,12 @@ export default function Home() {
 
         <div className={style.search}>
           <input list="teste" onChange={newBook} type="text" placeholder="digite um livro" />
-          <datalist id="teste">
+          {/* <datalist id="teste">
             {recomend.map((item, key) => 
               item.volumeInfo.title ?
                 <option value={item.volumeInfo.title} key={key}></option> : <></>        
             )}
-          </datalist>
+          </datalist> */}
           <button onClick={search}>Pesquisar</button>
         </div>
 
