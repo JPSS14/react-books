@@ -2,7 +2,7 @@ import Head from 'next/head';
 import style from '../styles/main.module.scss';
 import axios from 'axios';
 import { useState } from 'react';
-import apiKey from '../apiKey.json';
+import apiKey from '../../apiKey.json';
 
 export default function Home() {
   const [book, setBook] = useState("");
@@ -32,9 +32,6 @@ export default function Home() {
       </Head>
 
       <main>
-        <h1>
-          Welcome! I am React-Books!
-        </h1>
 
         <input onChange={newBook} type="text" placeholder="digite um livro" />
         <button onClick={search}>Pesquisar</button>
