@@ -4,11 +4,11 @@ import { AiOutlineSearch, AiFillStar } from 'react-icons/ai';
 import style from './Search.module.scss';
 
 export function Search() {
-    const { newBook, search } = useBooks();
+    const { newBook, search, favoriteFilter } = useBooks();
     return (
         <div className={style.search}>
 
-            <button className={style.favoriteButton} onClick={search}>
+            <button className={style.favoriteButton} onClick={favoriteFilter}>
                 <span className={style.buttonText}>Favoritos</span>
                 <AiFillStar className={style.buttonIconLeft} />
             </button>

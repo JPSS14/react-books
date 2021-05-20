@@ -7,17 +7,8 @@ import { useState } from 'react';
 
 export default function Home() {
 
-  const { result, myResult } = useBooks();
-  const [star, setStar] = useState(0);
+  const { result, myResult, favoriteBook} = useBooks();
 
-  function favorite(title: string) {
-    if (star === 0) {
-      setStar(1);
-      console.log(title);
-    } else {
-      setStar(0);
-    }
-  }
 
   return (
     <>
@@ -43,7 +34,7 @@ export default function Home() {
                   <p>{item.title}</p>
                   <img src={item.img} alt={item.title} title={item.title} className={item.img==="/sem-img.png" ? style.semImg : ""}/>
 
-                  {star === 0 ? <AiOutlineStar onClick={(e) => favorite(item.title)} key={key} /> : <AiTwotoneStar onClick={(e) => favorite(item.title)} key={key} />}
+                  {item.star === 0 ? <AiOutlineStar onClick={(e) => favoriteBook(item.title)} key={key} /> : <AiTwotoneStar onClick={(e) => favoriteBook(item.title)} key={key} />}
 
                 </article>
 

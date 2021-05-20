@@ -12,6 +12,8 @@ type BooksContextData = {
     search: (e: any) => void;
     result: any[];
     myResult: any[];
+    favoriteBook: (title: string) => void;
+    favoriteFilter: () => void;
 }
 
 export const BooksContext = createContext({} as BooksContextData);
@@ -25,6 +27,8 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
     const [book, setBook] = useState("");
     const [result, setResult] = useState([]);
     const [myResult, setMyResult] = useState([]);
+    const [star, setStar] = useState();
+    const [favorite, setFavorite] = useState([]);
     const key = apiKey[0].apiKey;
 
     function newBook(e: any) {
@@ -39,7 +43,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                 setResult(info.data.items);
             });
         console.log(book);
-        
+
     }
 
     useEffect(() => {
@@ -50,14 +54,16 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
                 tes = {
                     title: item.volumeInfo.title,
-                    img: item.volumeInfo.imageLinks.thumbnail
+                    img: item.volumeInfo.imageLinks.thumbnail,
+                    star: 0
                 }
                 array.push(tes);
                 console.log("tem");
             } else {
                 tes = {
                     title: item.volumeInfo.title,
-                    img: "/sem-img.png"
+                    img: "/sem-img.png",
+                    star: 0
                 }
                 array.push(tes);
                 console.log("não tem");
@@ -66,9 +72,39 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
         });
         console.log("tes", array);
         setMyResult(array);
-    
+
     }, [result]);
-        
+
+    function favoriteBook(title: string) {
+        let array = [];
+        myResult.map((item, key) => {
+            if (item.title === title) {
+                if (item.star === 0) {
+                    item.star = 1;
+
+                } else {
+                    item.star = 0;
+                }
+            }
+            array.push(item);
+        })
+        setMyResult(array);
+        console.log("star", array);
+    }
+
+    function favoriteFilter() {
+        let array = [];
+        myResult.map((item, key) => {
+            if (item.star === 1) {
+                array.push(item);
+            }
+        });
+        setFavorite(array);
+    }
+
+    useEffect(() => {
+        setMyResult(favorite);
+    }, [favorite])
 
     const aut = key.slice(62, 101);
     return (
@@ -77,7 +113,9 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                 newBook,
                 search,
                 result,
-                myResult
+                myResult,
+                favoriteBook,
+                favoriteFilter
             }}>
             {children}
         </BooksContext.Provider>
