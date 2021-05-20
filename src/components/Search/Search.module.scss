@@ -2,4 +2,63 @@
     display: flex;
     flex-wrap: wrap;
     flex-basis: 100%;
+    justify-content: center;
+    margin: 20px 0;
+
+    input{
+        font-size: 1.1rem;
+        padding: 5px;
+        color: var(--brown);
+        border: solid 3px var(--brown);
+    }
+
+    button{
+
+        font-size: 1.1rem;
+        color: var(--dark-gray);
+        padding: 5px;
+        border-radius: 0px 10px 10px 0px;
+        border-right: solid 3px var(--brown);
+        border-top: solid 3px var(--brown);
+        border-bottom: solid 3px var(--brown);
+        background: var(--brown);
+        border-left: solid 3px var(--brown);
+        cursor: pointer;
+        font-weight: 700;
+        
+        &:hover{
+            color: #000;
+            background: var(--dark-brown);
+            border-right: solid 3px var(--dark-brown);
+            border-top: solid 3px var(--dark-brown);
+            border-bottom: solid 3px var(--dark-brown);
+            border-left: solid 3px var(--dark-brown);
+        }
+
+        .buttonIconLeft{
+            font-size: 1.2rem;
+            transform: translate(20%,11%);
+        }
+        .buttonIconRight{
+            font-size: 1.2rem;
+            transform: translate(-20%,11%);
+        }
+    }
+
+    .favoriteButton{
+        border-radius: 10px 0px 0px 10px;
+    }
+
+    .teste{
+        background: #000;
+    }
+
+    @media (max-width: 550px){
+        button{
+            padding: 0 15px;
+            .buttonText{
+                display: none;
+            }
+        }
+    }
 }
