@@ -11,6 +11,7 @@ type BooksContextData = {
     newBook: (e: any) => void;
     search: (e: any) => void;
     result: any[];
+    myResult: any[];
 }
 
 export const BooksContext = createContext({} as BooksContextData);
@@ -23,6 +24,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
     const [book, setBook] = useState("");
     const [result, setResult] = useState([]);
+    const [myResult, setMyResult] = useState([]);
     const key = apiKey[0].apiKey;
 
     function newBook(e: any) {
@@ -37,7 +39,36 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                 setResult(info.data.items);
             });
         console.log(book);
+        
     }
+
+    useEffect(() => {
+        let array = [];
+        let tes = {};
+        result.map((item, key) => {
+            if (item.volumeInfo.imageLinks) {
+
+                tes = {
+                    title: item.volumeInfo.title,
+                    img: item.volumeInfo.imageLinks.thumbnail
+                }
+                array.push(tes);
+                console.log("tem");
+            } else {
+                tes = {
+                    title: item.volumeInfo.title,
+                    img: "/sem-img.png"
+                }
+                array.push(tes);
+                console.log("não tem");
+            }
+
+        });
+        console.log("tes", array);
+        setMyResult(array);
+    
+    }, [result]);
+        
 
     const aut = key.slice(62, 101);
     return (
@@ -45,7 +76,8 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
             value={{
                 newBook,
                 search,
-                result
+                result,
+                myResult
             }}>
             {children}
         </BooksContext.Provider>

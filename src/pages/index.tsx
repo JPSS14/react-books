@@ -1,11 +1,23 @@
 import Head from 'next/head';
+import { AiOutlineStar, AiTwotoneStar } from 'react-icons/ai';
 import style from '../styles/main.module.scss';
 import { useBooks } from '../contexts/BooksContext';
 import { Search } from '../components/Search';
+import { useState } from 'react';
 
 export default function Home() {
-  
-  const {result} = useBooks();
+
+  const { result, myResult } = useBooks();
+  const [star, setStar] = useState(0);
+
+  function favorite(title: string) {
+    if (star === 0) {
+      setStar(1);
+      console.log(title);
+    } else {
+      setStar(0);
+    }
+  }
 
   return (
     <>
@@ -17,28 +29,22 @@ export default function Home() {
 
       <main className={style.main}>
 
-        <Search/>
+        <Search />
 
         {result != [] ?
 
 
           (
             <section className={style.searchResult}>
-              {result.map((item, key) =>
+              {myResult.map((item, key) =>
 
                 <article key={key} className={style.resultArticle}>
-                  {item.volumeInfo.title && item.volumeInfo.imageLinks ?
-                    <>
-                      <p>{item.volumeInfo.title}</p>
-                      <img src={item.volumeInfo.imageLinks.thumbnail} alt={item.volumeInfo.title} title={item.volumeInfo.title} />
-                    </>
-                    :
-                    <>
-                      <p>{item.volumeInfo.title}</p>
-                      <p>não tem</p>
-                    </>
 
-                  }
+                  <p>{item.title}</p>
+                  <img src={item.img} alt={item.title} title={item.title} className={item.img==="/sem-img.png" ? style.semImg : ""}/>
+
+                  {star === 0 ? <AiOutlineStar onClick={(e) => favorite(item.title)} key={key} /> : <AiTwotoneStar onClick={(e) => favorite(item.title)} key={key} />}
+
                 </article>
 
               )}
@@ -47,8 +53,6 @@ export default function Home() {
           :
           (<></>)
         }
-
-
 
       </main>
     </>
