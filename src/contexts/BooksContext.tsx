@@ -14,6 +14,8 @@ type BooksContextData = {
     myResult: any[];
     favoriteBook: (title: string) => void;
     favoriteFilter: () => void;
+    bookList: any[];
+    totalItems: number;
 }
 
 export const BooksContext = createContext({} as BooksContextData);
@@ -25,6 +27,8 @@ type BooksContextProviderProps = {
 export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
     const [book, setBook] = useState("");
+    const [bookList, setBookList] = useState([]);
+    const [totalItems, setTotalItems] = useState(0);
     const [result, setResult] = useState([]);
     const [myResult, setMyResult] = useState([]);
     const [star, setStar] = useState([]);
@@ -37,12 +41,14 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
     function search(e) {
         e.preventDefault();
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${aut}&maxResults=16`)
+        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${aut}&maxResults=40`)
             .then(info => {
                 console.log(info.data.items);
+                setTotalItems(info.data.totalItems);
+                
                 setResult(info.data.items);
             });
-        console.log(book);
+            console.log("iteems",totalItems);
 
     }
 
@@ -119,6 +125,10 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
     }, [result]);
 
+    useEffect(() => {
+        setBookList(myResult.slice(0, totalItems));
+    },[myResult])
+
     function favoriteBook(title: string) {
         let array = [];
         let salvos = favorite;
@@ -165,7 +175,9 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                 result,
                 myResult,
                 favoriteBook,
-                favoriteFilter
+                favoriteFilter,
+                bookList,
+                totalItems
             }}>
             {children}
         </BooksContext.Provider>

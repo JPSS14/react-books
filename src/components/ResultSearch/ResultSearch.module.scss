@@ -109,4 +109,39 @@
             flex-basis: 70%;
         }
     }
+
+    .pagination{
+        display: flex;
+        flex-basis: 100%;
+        justify-content: center;
+        margin: 20px 0;
+
+        .paginationButtons{
+            display: flex;
+            align-items: center;
+
+            li{
+                margin: 10px 10px;
+                font-size: 1.3rem;
+                color: var(--brown);
+                cursor: pointer;
+
+                &:hover{
+                    color: var(--dark-brown);
+                }
+
+                .previousButton, .nextButton{
+                    font-size: 1.7rem;
+                }
+
+                
+            }
+            .paginationActive{
+                background: var(--brown);
+                color: var(--dark-gray);
+                border-radius: 20px;
+                padding: 4px;
+            }
+        }
+    }
 }
