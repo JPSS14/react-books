@@ -5,7 +5,7 @@ import style from './ResultSearch.module.scss';
 export function ResultSearch() {
     const { result, myResult, favoriteBook } = useBooks();
     return (
-        <section>
+        <>
             {result != [] ?
 
 
@@ -14,12 +14,23 @@ export function ResultSearch() {
                         {myResult.map((item, key) =>
 
                             <article key={key} className={style.resultArticle}>
+                                <header>
+                                    <h2>{item.title}</h2>
+                                </header>
+                                
+                                <div className={style.imgContainer}>
+                                    <img src={item.img} alt={item.title} title={item.title} className={item.img === "/sem-img.png" ? style.semImg : ""} />
+                                </div>
 
-                                <p>{item.title}</p>
-                                <img src={item.img} alt={item.title} title={item.title} className={item.img === "/sem-img.png" ? style.semImg : ""} />
+                                <button>Ver mais</button>
 
-                                {item.star === 0 ? <AiOutlineStar onClick={(e) => favoriteBook(item.title)} key={key} /> : <AiTwotoneStar onClick={(e) => favoriteBook(item.title)} key={key} />}
+                                <div className={style.starContainer}>
+                                    {item.star === 0 ? <AiOutlineStar className={style.starVoid} onClick={(e) => favoriteBook(item.title)} key={key} /> : <AiTwotoneStar onClick={(e) => favoriteBook(item.title)} key={key} className={style.starFull} />}
+                                </div>
 
+                                <footer>
+                                    <p>Publicado: {item.data === undefined ? "Sem data" : item.data}</p>
+                                </footer>
                             </article>
 
                         )}
@@ -28,7 +39,7 @@ export function ResultSearch() {
                 :
                 (<></>)
             }
-        </section>
+        </>
     );
 
 }

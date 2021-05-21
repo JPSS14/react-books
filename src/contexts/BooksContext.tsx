@@ -53,6 +53,8 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
             if (item.volumeInfo.imageLinks) {
 
                 tes = {
+                    id: item.id,
+                    data: item.volumeInfo.publishedDate,
                     title: item.volumeInfo.title,
                     img: item.volumeInfo.imageLinks.thumbnail,
                     star: 0
@@ -62,6 +64,8 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                     favorite.map((item2, key) => {
                         if (item.volumeInfo.title === item2.title) {
                             tes = {
+                                id: item.id,
+                                data: item.volumeInfo.publishedDate,
                                 title: item.volumeInfo.title,
                                 img: item.volumeInfo.imageLinks.thumbnail,
                                 star: 1
@@ -79,6 +83,8 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
             } else {
 
                 tes = {
+                    id: item.id,
+                    data: item.volumeInfo.publishedDate,
                     title: item.volumeInfo.title,
                     img: "/sem-img.png",
                     star: 0
