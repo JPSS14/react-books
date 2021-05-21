@@ -1,14 +1,9 @@
 import Head from 'next/head';
-import { AiOutlineStar, AiTwotoneStar } from 'react-icons/ai';
 import style from '../styles/main.module.scss';
-import { useBooks } from '../contexts/BooksContext';
 import { Search } from '../components/Search';
-import { useState } from 'react';
+import { ResultSearch } from '../components/ResultSearch';
 
 export default function Home() {
-
-  const { result, myResult, favoriteBook} = useBooks();
-
 
   return (
     <>
@@ -21,30 +16,8 @@ export default function Home() {
       <main className={style.main}>
 
         <Search />
-
-        {result != [] ?
-
-
-          (
-            <section className={style.searchResult}>
-              {myResult.map((item, key) =>
-
-                <article key={key} className={style.resultArticle}>
-
-                  <p>{item.title}</p>
-                  <img src={item.img} alt={item.title} title={item.title} className={item.img==="/sem-img.png" ? style.semImg : ""}/>
-
-                  {item.star === 0 ? <AiOutlineStar onClick={(e) => favoriteBook(item.title)} key={key} /> : <AiTwotoneStar onClick={(e) => favoriteBook(item.title)} key={key} />}
-
-                </article>
-
-              )}
-            </section>
-          )
-          :
-          (<></>)
-        }
-
+        <ResultSearch/>
+        
       </main>
     </>
   )
