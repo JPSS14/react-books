@@ -27,7 +27,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
     const [book, setBook] = useState("");
     const [result, setResult] = useState([]);
     const [myResult, setMyResult] = useState([]);
-    const [star, setStar] = useState();
+    const [star, setStar] = useState([]);
     const [favorite, setFavorite] = useState([]);
     const key = apiKey[0].apiKey;
 
@@ -57,17 +57,55 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                     img: item.volumeInfo.imageLinks.thumbnail,
                     star: 0
                 }
-                array.push(tes);
+
+                if (favorite != []) {
+                    favorite.map((item2, key) => {
+                        if (item.volumeInfo.title === item2.title) {
+                            tes = {
+                                title: item.volumeInfo.title,
+                                img: item.volumeInfo.imageLinks.thumbnail,
+                                star: 1
+                            }
+
+                        }
+
+                    })
+                }
+
+
+
+
                 console.log("tem");
             } else {
+
                 tes = {
                     title: item.volumeInfo.title,
                     img: "/sem-img.png",
                     star: 0
                 }
-                array.push(tes);
+
+                // favorite.map((item2, key) => {
+                //     if (item.volumeInfo.title === item2.title) {
+                //         tes = {
+                //             title: item.volumeInfo.title,
+                //             img: "/sem-img.png",
+                //             star: 1
+                //         }
+
+                //     } else {
+                //         tes = {
+                //             title: item.volumeInfo.title,
+                //             img: "/sem-img.png",
+                //             star: 0
+                //         }
+
+                //     }
+                // })
+
+
                 console.log("não tem");
             }
+            array.push(tes);
 
         });
         console.log("tes", array);
@@ -77,11 +115,13 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
     function favoriteBook(title: string) {
         let array = [];
+        let salvos = favorite;
         myResult.map((item, key) => {
             if (item.title === title) {
                 if (item.star === 0) {
                     item.star = 1;
-
+                    setFavorite(item);
+                    console.log("salve", favorite);
                 } else {
                     item.star = 0;
                 }
@@ -95,16 +135,20 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
     function favoriteFilter() {
         let array = [];
         myResult.map((item, key) => {
+
             if (item.star === 1) {
                 array.push(item);
             }
         });
+        console.log("array f", array);
         setFavorite(array);
+        setStar([0]);
     }
 
     useEffect(() => {
+        console.log("favorite", favorite);
         setMyResult(favorite);
-    }, [favorite])
+    }, [star]);
 
     const aut = key.slice(62, 101);
     return (
