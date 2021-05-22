@@ -28,8 +28,6 @@ export default function Home() {
             <ResultSearch />
           )
         }
-
-        <Footer/>
       </main>
     </>
   )

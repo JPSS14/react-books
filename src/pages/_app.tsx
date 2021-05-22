@@ -1,3 +1,4 @@
+import { Footer } from '../components/Footer';
 import { Header } from '../components/Header/index';
 import {BooksContextProvider} from '../contexts/BooksContext'; 
 import '../styles/globals.css'
@@ -7,6 +8,7 @@ function MyApp({ Component, pageProps }) {
     <BooksContextProvider>
       <Header />  
       <Component {...pageProps} />
+      <Footer />
     </BooksContextProvider>
   );
 }
