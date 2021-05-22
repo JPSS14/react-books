@@ -2,9 +2,10 @@ import Head from 'next/head';
 import style from '../styles/main.module.scss';
 import { Search } from '../components/Search';
 import { ResultSearch } from '../components/ResultSearch';
+import { useBooks } from '../contexts/BooksContext';
 
 export default function Home() {
-
+  const { myResult } = useBooks();
   return (
     <>
       <Head>
@@ -16,8 +17,17 @@ export default function Home() {
       <main className={style.main}>
 
         <Search />
-        <ResultSearch/>
-        
+
+        {myResult.length === 0 ?
+          (
+            <div className={style.imgContainer}>
+              <img src="/img-fundo.png" alt="" />
+            </div>
+          ) : (
+            <ResultSearch />
+          )
+        }
+
       </main>
     </>
   )

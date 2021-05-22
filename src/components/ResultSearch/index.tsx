@@ -4,17 +4,17 @@ import { FaArrowAltCircleLeft, FaArrowAltCircleRight } from 'react-icons/fa';
 import style from './ResultSearch.module.scss';
 import Link from 'next/link';
 import ReactPaginate from 'react-paginate';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function ResultSearch() {
-    const { result, myResult, favoriteBook, bookList, totalItems } = useBooks();
-
+    const { favoriteBook, bookList } = useBooks();
 
     const [pageNumber, setPageNumber] = useState(0);
 
     const booksPerPage = 12;
     const pagesVisited = pageNumber * booksPerPage;
 
+    // Constrói os articles que serão exibidos, de acordo com o bookList(resultado do slice no myResult)
     const displayBook = bookList.slice(pagesVisited, pagesVisited + booksPerPage).map((item, key) => {
         return (
 
@@ -32,7 +32,7 @@ export function ResultSearch() {
                 </Link>
 
                 <div className={style.starContainer}>
-                    {item.star === 0 ? <AiOutlineStar className={style.starVoid} onClick={(e) => favoriteBook(item.title)} key={key} /> : <AiTwotoneStar onClick={(e) => favoriteBook(item.title)} key={key} className={style.starFull} />}
+                    {item.star === 0 ? <AiOutlineStar className={style.starVoid} onClick={(e) => favoriteBook(item.id)} key={key} /> : <AiTwotoneStar onClick={(e) => favoriteBook(item.id)} key={key} className={style.starFull} />}
                 </div>
 
                 <footer>
@@ -49,12 +49,14 @@ export function ResultSearch() {
 
 
         <section className={style.searchResult}>
+
             {displayBook}
 
+            {/* Paginação */}
             <div className={style.pagination}>
                 <ReactPaginate
-                    previousLabel={<FaArrowAltCircleLeft/>}
-                    nextLabel={<FaArrowAltCircleRight/>}
+                    previousLabel={<FaArrowAltCircleLeft />}
+                    nextLabel={<FaArrowAltCircleRight />}
                     pageCount={pageCount}
                     onPageChange={changePage}
                     containerClassName={style.paginationButtons}
@@ -64,7 +66,7 @@ export function ResultSearch() {
                     activeClassName={style.paginationActive}
                 />
             </div>
-        </section>
+        </section >
 
 
 

@@ -3,4 +3,14 @@
     flex-wrap: wrap;
     background: var(--dark-gray);
     justify-content: center;
+
+    .imgContainer{
+        display: flex;
+        flex-wrap: wrap;
+        flex-basis: 100%;
+
+        img{
+            width: 100%;
+        }
+    }
 }

@@ -1,14 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
-import apiKey from '../../apiKey.json';
-
-type Book = {
-    id: string;
-    data: string,
-    title: string,
-    img: string,
-    star: number
-};
 
 type BooksContextData = {
     newBook: (e: any) => void;
@@ -21,6 +12,7 @@ type BooksContextData = {
     totalItems: number;
     buildPage: (id: any) => void;
     activeBook: any[];
+    favorite: any[];
 }
 
 export const BooksContext = createContext({} as BooksContextData);
@@ -40,25 +32,27 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
     const [favorite, setFavorite] = useState([]);
     const [activeBook, setActiveBook] = useState([]);
     const [active, setActive] = useState([]);
-    const key = apiKey[0].apiKey;
 
+    // Recebe o livro que foi digitado
     function newBook(e: any) {
         setBook(e.target.value);
     }
 
+    // Envia o livro para a API e salva os resultados
     function search(e) {
         e.preventDefault();
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&key=${aut}&maxResults=40`)
+        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&maxResults=40`)
             .then(info => {
                 console.log(info.data.items);
                 setTotalItems(info.data.totalItems);
 
                 setResult(info.data.items);
             });
-
-
     }
 
+    // 1) Pega os resultados da API e salva em um State local, para evitar chamdas desnecessárias a API 
+    // 2) verifica se possuí imagem ou não, se não possuir insere uma imagem sem fundo
+    // 3) Compara com a lista de favoritos, se o elemento existir na lista de favoritos a estrela é preenchida
     useEffect(() => {
         let array = [];
         let tes = {};
@@ -89,67 +83,53 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                                 buy: item.saleInfo.buyLink,
                                 star: 1
                             }
-
                         }
-
                     })
                 }
-
-
-
-
-
             } else {
+                favorite.map((item2, key) => {
+                    if (item.volumeInfo.title === item2.title) {
+                        tes = {
+                            id: item.id,
+                            title: item.volumeInfo.title,
+                            img: "/sem-img.png",
+                            description: item.volumeInfo.description,
+                            saleability: item.saleInfo.saleability,
+                            buy: item.saleInfo.buyLink,
+                            star: 1
+                        }
 
-                tes = {
-                    id: item.id,
-                    data: item.volumeInfo.publishedDate,
-                    title: item.volumeInfo.title,
-                    img: "/sem-img.png",
-                    description: item.volumeInfo.description,
-                    saleability: item.saleInfo.saleability,
-                    buy: item.saleInfo.buyLink,
-                    star: 0
-                }
-
-                // favorite.map((item2, key) => {
-                //     if (item.volumeInfo.title === item2.title) {
-                //         tes = {
-                //             title: item.volumeInfo.title,
-                //             img: "/sem-img.png",
-                //             star: 1
-                //         }
-
-                //     } else {
-                //         tes = {
-                //             title: item.volumeInfo.title,
-                //             img: "/sem-img.png",
-                //             star: 0
-                //         }
-
-                //     }
-                // })
-
-
-
+                    } else {
+                        tes = {
+                            id: item.id,
+                            title: item.volumeInfo.title,
+                            img: "/sem-img.png",
+                            description: item.volumeInfo.description,
+                            saleability: item.saleInfo.saleability,
+                            buy: item.saleInfo.buyLink,
+                            star: 0
+                        }
+                    }
+                })
             }
             array.push(tes);
-
         });
         console.log("tes", array);
         setMyResult(array);
 
     }, [result]);
 
+    // Constrói o bookList para a paginação
     useEffect(() => {
         setBookList(myResult.slice(0, totalItems));
-    }, [myResult])
+    }, [myResult]);
 
-    function favoriteBook(title: string) {
+    // Quando clicar na estrela o livro é salvo na lista de favoritos, e a estrela é preenchida
+    function favoriteBook(id: string) {
         let array = [];
         let salvos = favorite;
         myResult.map((item, key) => {
-            if (item.title === title) {
+            if (item.id === id) {
                 if (item.star === 0) {
                     item.star = 1;
                     setFavorite(item);
@@ -164,6 +144,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
         console.log("star", array);
     }
 
+    // Monta um array e inseri ele nos favoritos
     function favoriteFilter() {
         let array = [];
         myResult.map((item, key) => {
@@ -177,11 +158,13 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
         setStar([0]);
     }
 
+    // Filtra os resultados em favoritos
     useEffect(() => {
         console.log("favorite", favorite);
         setMyResult(favorite);
     }, [star]);
 
+    // Busca o livro baseado no id que foi passado na url
     function buildPage(id: string) {
         if (myResult.filter(myResult => myResult.id === id)) {
             const book = myResult.filter(myResult => myResult.id === id);
@@ -195,12 +178,12 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
         // }
     }
 
+    // Recebe o resultado do buildPage e ativa um livro para que a pagina seja carregada com as suas informações
     useEffect(() => {
         setActiveBook(active);
         console.log("eu", activeBook);
     }, [active])
 
-    const aut = key.slice(62, 101);
     return (
         <BooksContext.Provider
             value={{
@@ -213,7 +196,8 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                 bookList,
                 totalItems,
                 buildPage,
-                activeBook
+                activeBook,
+                favorite
             }}>
             {children}
         </BooksContext.Provider>
@@ -221,7 +205,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
 }
 
+// Função para chamar o context, com o objetivo de economizar linhas de código nas chamadas a esse context
 export const useBooks = () => {
     return useContext(BooksContext);
 }
-
