@@ -3,8 +3,11 @@ import axios from 'axios';
 import apiKey from '../../apiKey.json';
 
 type Book = {
-    title: string;
-    img: string;
+    id: string;
+    data: string,
+    title: string,
+    img: string,
+    star: number
 };
 
 type BooksContextData = {
@@ -16,6 +19,8 @@ type BooksContextData = {
     favoriteFilter: () => void;
     bookList: any[];
     totalItems: number;
+    buildPage: (id: any) => void;
+    activeBook: any[];
 }
 
 export const BooksContext = createContext({} as BooksContextData);
@@ -33,6 +38,8 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
     const [myResult, setMyResult] = useState([]);
     const [star, setStar] = useState([]);
     const [favorite, setFavorite] = useState([]);
+    const [activeBook, setActiveBook] = useState([]);
+    const [active, setActive] = useState([]);
     const key = apiKey[0].apiKey;
 
     function newBook(e: any) {
@@ -45,10 +52,10 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
             .then(info => {
                 console.log(info.data.items);
                 setTotalItems(info.data.totalItems);
-                
+
                 setResult(info.data.items);
             });
-            console.log("iteems",totalItems);
+
 
     }
 
@@ -63,6 +70,9 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                     data: item.volumeInfo.publishedDate,
                     title: item.volumeInfo.title,
                     img: item.volumeInfo.imageLinks.thumbnail,
+                    description: item.volumeInfo.description,
+                    saleability: item.saleInfo.saleability,
+                    buy: item.saleInfo.buyLink,
                     star: 0
                 }
 
@@ -74,6 +84,9 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                                 data: item.volumeInfo.publishedDate,
                                 title: item.volumeInfo.title,
                                 img: item.volumeInfo.imageLinks.thumbnail,
+                                description: item.volumeInfo.description,
+                                saleability: item.saleInfo.saleability,
+                                buy: item.saleInfo.buyLink,
                                 star: 1
                             }
 
@@ -85,7 +98,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
 
 
-                console.log("tem");
+
             } else {
 
                 tes = {
@@ -93,6 +106,9 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                     data: item.volumeInfo.publishedDate,
                     title: item.volumeInfo.title,
                     img: "/sem-img.png",
+                    description: item.volumeInfo.description,
+                    saleability: item.saleInfo.saleability,
+                    buy: item.saleInfo.buyLink,
                     star: 0
                 }
 
@@ -115,7 +131,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                 // })
 
 
-                console.log("não tem");
+
             }
             array.push(tes);
 
@@ -127,7 +143,7 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
 
     useEffect(() => {
         setBookList(myResult.slice(0, totalItems));
-    },[myResult])
+    }, [myResult])
 
     function favoriteBook(title: string) {
         let array = [];
@@ -166,6 +182,24 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
         setMyResult(favorite);
     }, [star]);
 
+    function buildPage(id: string) {
+        if (myResult.filter(myResult => myResult.id === id)) {
+            const book = myResult.filter(myResult => myResult.id === id);
+            setActive(book);
+            console.log("my");
+        }
+        // if(myResult.filter(favorite => favorite.id === id)){
+        //     const book = favorite.filter(favorite => favorite.id === id);
+        //     setActive(book);
+        //     console.log("fa");
+        // }
+    }
+
+    useEffect(() => {
+        setActiveBook(active);
+        console.log("eu", activeBook);
+    }, [active])
+
     const aut = key.slice(62, 101);
     return (
         <BooksContext.Provider
@@ -177,7 +211,9 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                 favoriteBook,
                 favoriteFilter,
                 bookList,
-                totalItems
+                totalItems,
+                buildPage,
+                activeBook
             }}>
             {children}
         </BooksContext.Provider>

@@ -15,8 +15,6 @@ export function ResultSearch() {
     const booksPerPage = 12;
     const pagesVisited = pageNumber * booksPerPage;
 
-    console.log("list", bookList);
-
     const displayBook = bookList.slice(pagesVisited, pagesVisited + booksPerPage).map((item, key) => {
         return (
 
