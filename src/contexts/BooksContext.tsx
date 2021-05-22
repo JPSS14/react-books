@@ -41,13 +41,16 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
     // Envia o livro para a API e salva os resultados
     function search(e) {
         e.preventDefault();
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&maxResults=40`)
-            .then(info => {
-                console.log(info.data.items);
-                setTotalItems(info.data.totalItems);
+        if (book !== "") {
+            axios.get(`https://www.googleapis.com/books/v1/volumes?q=${book}&maxResults=40`)
+                .then(info => {
+                    console.log(info.data.items);
+                    setTotalItems(info.data.totalItems);
 
-                setResult(info.data.items);
-            });
+                    setResult(info.data.items);
+                });
+        }
+
     }
 
     // 1) Pega os resultados da API e salva em um State local, para evitar chamdas desnecessárias a API 
@@ -87,30 +90,34 @@ export function BooksContextProvider({ children }: BooksContextProviderProps) {
                     })
                 }
             } else {
-                favorite.map((item2, key) => {
-                    if (item.volumeInfo.title === item2.title) {
-                        tes = {
-                            id: item.id,
-                            title: item.volumeInfo.title,
-                            img: "/sem-img.png",
-                            description: item.volumeInfo.description,
-                            saleability: item.saleInfo.saleability,
-                            buy: item.saleInfo.buyLink,
-                            star: 1
-                        }
 
-                    } else {
-                        tes = {
-                            id: item.id,
-                            title: item.volumeInfo.title,
-                            img: "/sem-img.png",
-                            description: item.volumeInfo.description,
-                            saleability: item.saleInfo.saleability,
-                            buy: item.saleInfo.buyLink,
-                            star: 0
+                tes = {
+                    id: item.id,
+                    data: item.volumeInfo.publishedDate,
+                    title: item.volumeInfo.title,
+                    img: "/sem-img.png",
+                    description: item.volumeInfo.description,
+                    saleability: item.saleInfo.saleability,
+                    buy: item.saleInfo.buyLink,
+                    star: 0
+                }
+
+                if (favorite != []) {
+                    favorite.map((item2, key) => {
+                        if (item.volumeInfo.title === item2.title) {
+                            tes = {
+                                id: item.id,
+                                data: item.volumeInfo.publishedDate,
+                                title: item.volumeInfo.title,
+                                img: "/sem-img.png",
+                                description: item.volumeInfo.description,
+                                saleability: item.saleInfo.saleability,
+                                buy: item.saleInfo.buyLink,
+                                star: 1
+                            }
                         }
-                    }
-                })
+                    })
+                }
             }
             array.push(tes);
         });

@@ -2,6 +2,7 @@ import Head from 'next/head';
 import style from '../styles/main.module.scss';
 import { Search } from '../components/Search';
 import { ResultSearch } from '../components/ResultSearch';
+import {Footer} from '../components/Footer';
 import { useBooks } from '../contexts/BooksContext';
 
 export default function Home() {
@@ -28,6 +29,7 @@ export default function Home() {
           )
         }
 
+        <Footer/>
       </main>
     </>
   )

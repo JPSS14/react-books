@@ -13,7 +13,7 @@ export function Search() {
                 <AiFillStar className={style.buttonIconLeft} />
             </button>
 
-            <input list="teste" onChange={newBook} type="text" placeholder="digite um livro" />
+            <input list="teste" onChange={newBook} type="text" placeholder="Digite um livro" />
             <datalist id="teste" className={style.teste}>
                 {autocomplete.map((item, key) =>
                     item.nome ?

@@ -52,7 +52,7 @@ export function ResultSearch() {
 
             {displayBook}
 
-            {/* Paginação */}
+            
             <div className={style.pagination}>
                 <ReactPaginate
                     previousLabel={<FaArrowAltCircleLeft />}
@@ -67,44 +67,6 @@ export function ResultSearch() {
                 />
             </div>
         </section >
-
-
-
-        // <>
-        //     {result != [] ?
-        //         (
-        //             <section className={style.searchResult}>
-        //                 {myResult.map((item, key) =>
-
-        //                     <article key={key} className={style.resultArticle}>
-        //                         <header>
-        //                             <h2>{item.title}</h2>
-        //                         </header>
-
-        //                         <div className={style.imgContainer}>
-        //                             <img src={item.img} alt={item.title} title={item.title} className={item.img === "/sem-img.png" ? style.semImg : ""} />
-        //                         </div>
-
-        //                         <Link href={`/livro/${item.id}`}>
-        //                             <button>Ver mais</button>
-        //                         </Link>
-
-        //                         <div className={style.starContainer}>
-        //                             {item.star === 0 ? <AiOutlineStar className={style.starVoid} onClick={(e) => favoriteBook(item.title)} key={key} /> : <AiTwotoneStar onClick={(e) => favoriteBook(item.title)} key={key} className={style.starFull} />}
-        //                         </div>
-
-        //                         <footer>
-        //                             <p>Publicado: {item.data === undefined ? "Sem data" : item.data}</p>
-        //                         </footer>
-        //                     </article>
-
-        //                 )}
-        //             </section>
-        //         )
-        //         :
-        //         (<></>)
-        //     }
-        // </>
     );
 
 }
